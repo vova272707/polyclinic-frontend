@@ -5,13 +5,13 @@ import fs from 'fs'
 import path from 'path'
 
 export default defineConfig({
-  plugins: [react(), mkcert()],
+  plugins: [react()],
   base: "/polyclinic-frontend", // имя вашего репозитория
   server: {
-    https: {
-      key: fs.readFileSync(path.resolve(__dirname, 'cert.key')), // путь к приватному ключу
-      cert: fs.readFileSync(path.resolve(__dirname, 'cert.crt')), // путь к публичному сертификату
-    },
+    // https: {
+    //   key: fs.readFileSync(path.resolve(__dirname, 'cert.key')), // путь к приватному ключу
+    //   cert: fs.readFileSync(path.resolve(__dirname, 'cert.crt')), // путь к публичному сертификату
+    // },
     host: "0.0.0.0",
     port: 5174,
     proxy: {
