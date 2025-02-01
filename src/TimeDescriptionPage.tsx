@@ -3,6 +3,13 @@ import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar.tsx";
 import Breadcrumbs from "./components/Breadcrumbs.tsx";
 
+type TimeTableItem = {
+    pk: number;
+    title: string;
+    description: string;
+    picture_url: string;
+};
+
 const mockTimeTable = [
     { pk: 1, title: "06:00 - 09:00",
         description: "Осень — не только начало учебного года и пора золотого листопада, но и преддверие сезона гриппа. Резкая перемена погоды вызывает стресс, который снижает иммунитет и дает возможность грипповирусу проникнуть в организм. Надежной защитой от этой коварной и изменчивой инфекции, вызывающей серьезные осложнения, станет вакцинация. Она способствует укреплению иммунитета и расширяет наши возможности. Сознательное и ответственное отношение к своему здоровью и здоровью близких очень важно. Процедура займёт всего несколько минут, а эффект сохранится до следующего лета!",
@@ -17,7 +24,7 @@ const mockTimeTable = [
 
 const TimeDescriptionPage = () => {
     const { timeTableId } = useParams();
-    const [timeTable, setTimeTable] = useState();
+    const [timeTable, setTimeTable] = useState<TimeTableItem | undefined>(undefined);
     const [isLoading, setIsLoading] = useState(true); // Добавляем состояние загрузки
 
     const fetchTimeTable = async () => {
@@ -26,7 +33,7 @@ const TimeDescriptionPage = () => {
             const data = await response.json();
             setTimeTable(data);
         } catch {
-            const mockTime = mockTimeTable.find(item => item.pk === parseInt(timeTableId, 10));
+            const mockTime = mockTimeTable.find(item => item.pk === parseInt(timeTableId ?? "", 10));
             setTimeTable(mockTime);
         } finally {
             setTimeout(() => setIsLoading(false), 200);
@@ -50,16 +57,16 @@ const TimeDescriptionPage = () => {
                 ) : (
                     timeTable && (
                         <div className="w-full max-w-2xl bg-white shadow-lg rounded-lg p-6 animate-fade-in">
-                            <h1 className="text-4xl font-bold text-gray-900 text-center">{timeTable.title}</h1>
+                            <h1 className="text-2xl md:text-4xl font-bold text-gray-900 text-center">{timeTable.title}</h1>
 
                             <div className="mt-6 bg-[#3B6E85] text-white p-6 rounded-lg shadow-md animate-slide-up relative">
                                 <img
                                     src={timeTable.picture_url}
                                     alt="Иконка"
-                                    className="w-32 h-32 object-cover rounded-md shadow-md float-right ml-4"
+                                    className="w-16 h-16 md:w-32 md:h-32 object-cover rounded-md shadow-md float-right ml-4"
                                 />
-                                <h2 className="text-2xl font-semibold">Полезная информация</h2>
-                                <p className="mt-4 text-lg leading-relaxed">{timeTable.description}</p>
+                                <h2 className="text-xl md:text-2xl font-semibold">Полезная информация</h2>
+                                <p className="mt-4 text-sm md:text-lg leading-relaxed">{timeTable.description}</p>
                                 <div className="clear-both"></div>
                             </div>
                         </div>
