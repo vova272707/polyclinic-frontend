@@ -1,0 +1,19 @@
+{
+  "name": "Поликлиника МГТУ им Н.Э. Баумана",
+  "short_name": "Поликлиника",
+  "start_url": "/polyclinic-frontend/",
+  "display": "standalone",
+  "background_color": "#fdfdfd",
+  "theme_color": "#db4938",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/polyclinic-frontend/logo.png",
+      "type": "image/png", "sizes": "111x110", "purpose": "any"
+    },
+    {
+      "src": "/polyclinic-frontend/building-illustration.svg",
+      "type": "image/svg", "sizes": "593x323", "purpose": "any"
+    }
+  ]
+}

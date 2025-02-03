@@ -12,9 +12,9 @@ type TimeTableItem = {
 };
 
 const mockTimeTable = [
-    { pk: 1, title: "06:00 - 09:00", picture_url: "http://127.0.0.1:9000/poly/69.png" },
-    { pk: 2, title: "09:00 - 12:00", picture_url: "http://127.0.0.1:9000/poly/912.png" },
-    { pk: 3, title: "12:00 - 15:00", picture_url: "http://127.0.0.1:9000/poly/1215.png" },
+    { pk: 1, title: "06:00 - 09:00", picture_url: "http://10.0.2.2:9000/poly/69.png" },
+    { pk: 2, title: "09:00 - 12:00", picture_url: "http://10.0.2.2:9000/poly/912.png" },
+    { pk: 3, title: "12:00 - 15:00", picture_url: "http://10.0.2.2:9000/poly/1215.png" },
 ];
 
 const TimeTablePage = () => {
