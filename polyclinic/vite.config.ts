@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 // @ts-expect-error process is a nodejs global
-const host = process.env.TAURI_DEV_HOST;
+const host = "10.0.85.2";
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
@@ -19,7 +19,7 @@ export default defineConfig(async () => ({
     host: host || false,
     proxy: {
       "/api": {
-          target: "http://localhost:8000",
+          target: "http://192.168.1.8:8000",
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, "/"),
       },

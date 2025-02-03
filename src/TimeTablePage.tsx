@@ -12,9 +12,9 @@ type TimeTableItem = {
 };
 
 const mockTimeTable = [
-    { pk: 1, title: "06:00 - 09:00", picture_url: "http://127.0.0.1:9000/poly/69.png" },
-    { pk: 2, title: "09:00 - 12:00", picture_url: "http://127.0.0.1:9000/poly/912.png" },
-    { pk: 3, title: "12:00 - 15:00", picture_url: "http://127.0.0.1:9000/poly/1215.png" },
+    { pk: 1, title: "06:00 - 09:00", picture_url: "http://localhost:9000/poly/69.png" },
+    { pk: 2, title: "09:00 - 12:00", picture_url: "http://localhost:9000/poly/912.png" },
+    { pk: 3, title: "12:00 - 15:00", picture_url: "http://localhost:9000/poly/1215.png" },
 ];
 
 const TimeTablePage = () => {
@@ -56,10 +56,22 @@ const TimeTablePage = () => {
             dispatch(setTimeTable(filteredTime));
         } catch (error) {
             console.error("Ошибка при выполнении поиска:", error);
-            dispatch(setTimeTable(mockTimeTable));
+            const filteredLocalTime = mockTimeTable.filter(timetable => {
+                const matchesTitle = input
+                    ? timetable.title.toLowerCase().includes(input.toLowerCase())
+                    : true;
+                return matchesTitle;
+            });
+            dispatch(setTimeTable(filteredLocalTime));
         } finally {
             setIsLoading(false);
         }
+    };
+
+    // Функция для обработки ошибки загрузки изображения
+    const handleImageError = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
+        const target = event.target as HTMLImageElement;
+        target.src = "/polyclinic-frontend/default_time.svg"; // Убедитесь, что путь правильный
     };
 
     return (
@@ -102,7 +114,12 @@ const TimeTablePage = () => {
                                             animate__animated animate__fadeInUp`}
                                 style={{ animationDelay: `${index * 150}ms` }}
                             >
-                                <img src={item.picture_url} alt={item.title} className="w-28 h-28 object-contain" />
+                                <img
+                                    src={item.picture_url}
+                                    alt={item.title}
+                                    className="w-28 h-28 object-contain"
+                                    onError={handleImageError} // Обработка ошибки загрузки изображения
+                                />
                                 <span className="mt-2 text-sm font-medium bg-gray-100 px-3 py-1 rounded-lg">{item.title}</span>
 
                                 <Link

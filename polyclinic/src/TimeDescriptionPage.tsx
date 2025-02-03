@@ -44,6 +44,12 @@ const TimeDescriptionPage = () => {
         fetchTimeTable();
     }, [timeTableId]);
 
+    // Функция для обработки ошибки загрузки изображения
+    const handleImageError = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
+        const target = event.target as HTMLImageElement;
+        target.src = "/polyclinic/default_time.gif"; // Укажите путь к дефолтному изображению
+    };
+
     return (
         <div className="min-h-screen bg-gray-100">
             <Navbar />
@@ -64,6 +70,7 @@ const TimeDescriptionPage = () => {
                                     src={timeTable.picture_url}
                                     alt="Иконка"
                                     className="w-16 h-16 md:w-32 md:h-32 object-cover rounded-md shadow-md float-right ml-4"
+                                    onError={handleImageError} // Обработка ошибки загрузки изображения
                                 />
                                 <h2 className="text-xl md:text-2xl font-semibold">Полезная информация</h2>
                                 <p className="mt-4 text-sm md:text-lg leading-relaxed">{timeTable.description}</p>
