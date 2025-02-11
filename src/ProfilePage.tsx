@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateProfileAsync } from "./redux/authSlice";
 import Navbar from "./components/Navbar";
 import Breadcrumbs from "./components/Breadcrumbs";
+import { FaUserCircle } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const ProfilePage = () => {
     const dispatch = useDispatch();
@@ -40,20 +42,33 @@ const ProfilePage = () => {
             <Breadcrumbs path="/profile" />
 
             <div className="container mx-auto p-6 flex flex-col items-center">
-                <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-                    <h2 className="text-2xl font-bold mb-4 text-center">Профиль</h2>
-                    <p className="mb-2 text-center">
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center"
+                >
+                    {/* Аватар пользователя */}
+                    <motion.div
+                        whileHover={{ scale: 1.1 }}
+                        className="flex justify-center mb-4"
+                    >
+                        <FaUserCircle className="text-6xl text-gray-400" />
+                    </motion.div>
+
+                    <h2 className="text-3xl font-bold mb-4 text-gray-800">Профиль</h2>
+                    <p className="mb-2 text-gray-600">
                         <strong>Имя пользователя:</strong> {username}
                     </p>
 
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} className="space-y-3">
                         <input
-                            type="username"
+                            type="text"
                             name="username"
                             placeholder="Новый логин"
                             value={formData.username}
                             onChange={handleChange}
-                            className="border p-2 w-full rounded-md mb-2"
+                            className="border p-2 w-full rounded-md shadow-sm focus:ring-2 focus:ring-[#144ECA] focus:border-[#144ECA]"
                         />
                         <input
                             type="password"
@@ -61,7 +76,7 @@ const ProfilePage = () => {
                             placeholder="Новый пароль"
                             value={formData.password}
                             onChange={handleChange}
-                            className="border p-2 w-full rounded-md mb-2"
+                            className="border p-2 w-full rounded-md shadow-sm focus:ring-2 focus:ring-[#144ECA] focus:border-[#144ECA]"
                         />
                         <input
                             type="email"
@@ -69,22 +84,31 @@ const ProfilePage = () => {
                             placeholder="Новая почта"
                             value={formData.email}
                             onChange={handleChange}
-                            className="border p-2 w-full rounded-md mb-2"
+                            className="border p-2 w-full rounded-md shadow-sm focus:ring-2 focus:ring-[#144ECA] focus:border-[#144ECA]"
                         />
 
-                        {error && <p className="text-red-500 text-center">{error}</p>}
-                        {success && <p className="text-green-500 text-center">{success}</p>}
+                        {error && <p className="text-red-500">{error}</p>}
+                        {success && <p className="text-green-500">{success}</p>}
 
-                        <button
+                        {/* Кнопка с анимацией */}
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                             type="submit"
-                            className="bg-blue-600 text-white py-2 px-4 rounded-md w-full mt-3
-                                       hover:bg-blue-700 transition-all duration-300"
+                            className="bg-[#144ECA] text-white py-2 px-4 rounded-md w-full font-semibold transition-all duration-300 shadow-md hover:bg-[#0e3b9e]"
                             disabled={status === "loading"}
                         >
-                            {status === "loading" ? "Обновление..." : "Обновить"}
-                        </button>
+                            {status === "loading" ? (
+                                <div className="flex justify-center items-center gap-2">
+                                    <div className="w-4 h-4 border-2 border-t-2 border-white border-opacity-50 rounded-full animate-spin"></div>
+                                    <span>Обновление...</span>
+                                </div>
+                            ) : (
+                                "Обновить"
+                            )}
+                        </motion.button>
                     </form>
-                </div>
+                </motion.div>
             </div>
         </div>
     );

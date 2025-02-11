@@ -44,12 +44,13 @@ export const registerAsync = createAsyncThunk(
     'auth/register',
     async (
         { email, username, password }: { email: string; username: string; password: string },
-        { rejectWithValue }
+        { dispatch, rejectWithValue }
     ) => {
         try {
-            const response = await api.register.registerCreate({ email, username, password });
-            return { username: response.username, is_staff: false };
-        } catch (error: any) {
+            await api.register.registerCreate({ email, username, password });
+            dispatch(loginAsync({ username, password }));
+            return { username: username, is_staff: false };
+        } catch (error) {
             return rejectWithValue(error.message || 'Ошибка при регистрации');
         }
     }

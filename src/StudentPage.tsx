@@ -17,7 +17,7 @@ const StudentPage = () => {
     const { studentId } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { fullName, group, currentTimeTable, isLoading, error } = useSelector(
+    const { fullName, group, currentTimeTable, isLoading, error, studentStatus } = useSelector(
         (state) => state.student
     );
 
@@ -36,8 +36,10 @@ const StudentPage = () => {
         setEditableGroup(group);
     }, [fullName, group]);
 
+    const isDraft = studentStatus === "draft";
+
     const handleUpdateStudent = () => {
-        if (studentId) {
+        if (studentId && isDraft) {
             dispatch(updateStudentData({ studentId, fullName: editableName, group: editableGroup }));
         }
     };
@@ -47,26 +49,26 @@ const StudentPage = () => {
     };
 
     const handleUpdateCost = (timeId: number) => {
-        if (studentId && costs[timeId] !== undefined) {
+        if (studentId && costs[timeId] !== undefined && isDraft) {
             dispatch(updateCost({ studentId, timeId, cost: costs[timeId] }));
         }
     };
 
     const handleDeleteTime = (timeId: number) => {
-        if (studentId) {
+        if (studentId && isDraft) {
             dispatch(deleteTimeFromStudent({ studentId, timeId }));
         }
     };
 
     const handleDeleteStudent = () => {
-        if (studentId) {
+        if (studentId && isDraft) {
             dispatch(deleteStudent(studentId));
             navigate("/timetable");
         }
     };
 
     const handleFormStudent = () => {
-        if (studentId) {
+        if (studentId && isDraft) {
             dispatch(formStudent(studentId));
             navigate("/timetable");
         }
@@ -108,6 +110,7 @@ const StudentPage = () => {
                                     value={editableName}
                                     onChange={(e) => setEditableName(e.target.value)}
                                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#144ECA] focus:border-[#144ECA]"
+                                    readOnly={!isDraft}
                                 />
                             </div>
                             <div className="mb-4">
@@ -117,14 +120,17 @@ const StudentPage = () => {
                                     value={editableGroup}
                                     onChange={(e) => setEditableGroup(e.target.value)}
                                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#144ECA] focus:border-[#144ECA]"
+                                    readOnly={!isDraft}
                                 />
                             </div>
-                            <button
-                                onClick={handleUpdateStudent}
-                                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300"
-                            >
-                                Обновить
-                            </button>
+                            {isDraft && (
+                                <button
+                                    onClick={handleUpdateStudent}
+                                    className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300"
+                                >
+                                    Обновить
+                                </button>
+                            )}
                         </div>
 
                         <div className="flex flex-col gap-4 max-w-4xl mx-auto">
@@ -149,40 +155,47 @@ const StudentPage = () => {
                                                 onChange={(e) => handleCostChange(time.pk, e.target.value)}
                                                 className="border px-3 py-1 rounded-md w-36 mr-2"
                                                 placeholder="Стоимость"
+                                                readOnly={!isDraft}
                                             />
-                                            <button
-                                                onClick={() => handleUpdateCost(time.pk)}
-                                                className="text-green-600 hover:text-green-800 text-xl"
-                                            >
-                                                <FaCheck />
-                                            </button>
+                                            {isDraft && (
+                                                <button
+                                                    onClick={() => handleUpdateCost(time.pk)}
+                                                    className="text-green-600 hover:text-green-800 text-xl"
+                                                >
+                                                    <FaCheck />
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
 
-                                    <button
-                                        onClick={() => handleDeleteTime(time.pk)}
-                                        className="text-red-500 hover:text-red-700 text-xl ml-4"
-                                    >
-                                        <FaTrash />
-                                    </button>
+                                    {isDraft && (
+                                        <button
+                                            onClick={() => handleDeleteTime(time.pk)}
+                                            className="text-red-500 hover:text-red-700 text-xl ml-4"
+                                        >
+                                            <FaTrash />
+                                        </button>
+                                    )}
                                 </div>
                             ))}
                         </div>
 
-                        <div className="flex justify-center gap-4 my-6">
-                            <button
-                                onClick={handleFormStudent}
-                                className="flex items-center bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-all duration-300"
-                            >
-                                <FaCheckCircle className="mr-2" /> Сформировать
-                            </button>
-                            <button
-                                onClick={handleDeleteStudent}
-                                className="flex items-center bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-all duration-300"
-                            >
-                                <FaTrash className="mr-2" /> Удалить
-                            </button>
-                        </div>
+                        {isDraft && (
+                            <div className="flex justify-center gap-4 my-6">
+                                <button
+                                    onClick={handleFormStudent}
+                                    className="flex items-center bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-all duration-300"
+                                >
+                                    <FaCheckCircle className="mr-2" /> Сформировать
+                                </button>
+                                <button
+                                    onClick={handleDeleteStudent}
+                                    className="flex items-center bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-all duration-300"
+                                >
+                                    <FaTrash className="mr-2" /> Удалить
+                                </button>
+                            </div>
+                        )}
                     </>
                 )}
             </div>

@@ -111,12 +111,14 @@ const TimeTablePage = () => {
                                 >
                                     Подробнее
                                 </Link>
-                                <button
-                                    onClick={() => handleAddToStudent(item.pk)}
-                                    className="mt-2 px-6 py-1 bg-cyan-300 text-white hover:bg-white hover:text-cyan-300 duration-300 border border-cyan-300 rounded-md text-sm"
-                                >
-                                    В заявку
-                                </button>
+                                {isAuthenticated && (
+                                    <button
+                                        onClick={() => handleAddToStudent(item.pk)}
+                                        className="mt-2 px-6 py-1 bg-cyan-300 text-white hover:bg-white hover:text-cyan-300 duration-300 border border-cyan-300 rounded-md text-sm"
+                                    >
+                                        В заявку
+                                    </button>
+                                )}
                             </motion.div>
                         ))}
                     </div>

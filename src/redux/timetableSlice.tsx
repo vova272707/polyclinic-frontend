@@ -78,6 +78,40 @@ export const addTimeToStudent = createAsyncThunk('timetable/addTimeToStudent', a
     }
 });
 
+export const deleteTime = createAsyncThunk('timetable/deleteTime', async (timetableId, { dispatch, rejectWithValue }) => {
+    try {
+        await api.timetables.timetablesDeleteDelete(timetableId);
+        dispatch(fetchTimeTable());
+        return timetableId;
+    } catch (error) {
+        return rejectWithValue(error.message);
+    }
+})
+
+export const createNewTime = createAsyncThunk(
+    "timetable/createNewTime",
+    async (formData, { rejectWithValue }) => {
+        try {
+            const response = await api.timetables.timetablesCreateCreate(formData);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const updateTime = createAsyncThunk(
+    "timetable/updateTime",
+    async ({ id, ...formData }, { rejectWithValue }) => {
+        try {
+            const response = await api.timetables.timetablesUpdateUpdate(id, formData);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
 const timetableSlice = createSlice({
     name: "timetable",
     initialState,
@@ -143,6 +177,20 @@ const timetableSlice = createSlice({
             .addCase(addTimeToStudent.rejected, (state, action) => {
                 state.error = action.payload as string;
             })
+
+            .addCase(deleteTime.fulfilled, (state, action) => {
+                state.timetable = state.timetable.filter((time) => time.pk !== action.payload);
+            })
+
+            .addCase(createNewTime.fulfilled, (state, action) => {
+                state.timetable.push(action.payload);
+            })
+
+            .addCase(updateTime.fulfilled, (state, action) => {
+                state.timetable = state.timetable.map((time) =>
+                    time.pk === action.payload.pk ? action.payload : time
+                );
+            });
     },
 });
 

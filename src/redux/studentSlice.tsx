@@ -9,6 +9,7 @@ const initialState = {
     fullName: "",
     group: "",
     cost: 0,
+    studentStatus: "",
     isLoading: false,
     error: null,
 };
@@ -29,10 +30,11 @@ export const fetchCurrentStudent = createAsyncThunk("timetable/fetchCurrentStude
 });
 
 export const fetchStudents = createAsyncThunk(
-    "teams/fetchStudents",
+    "student/fetchStudents",
     async (_, { rejectWithValue }) => {
         try {
             const response = await api.listStudents.listStudentsList();
+            console.log(response.data);
             return response.data;
         } catch (error) {
             return rejectWithValue("Ошибка при загрузке заявок");
@@ -41,7 +43,7 @@ export const fetchStudents = createAsyncThunk(
 );
 
 export const fetchStudentData = createAsyncThunk(
-    "teams/fetchStudentData",
+    "student/fetchStudentData",
     async (studentId, { rejectWithValue }) => {
         try {
             const response = await api.student.studentRead(studentId);
@@ -54,7 +56,7 @@ export const fetchStudentData = createAsyncThunk(
 );
 
 export const deleteTimeFromStudent = createAsyncThunk(
-    "teams/deleteTimeFromStudent",
+    "student/deleteTimeFromStudent",
     async ({ studentId, timeId }, { rejectWithValue }) => {
         try {
             await api.deleteFromStudent.deleteFromStudentTimetableDelete(studentId, timeId);
@@ -66,7 +68,7 @@ export const deleteTimeFromStudent = createAsyncThunk(
 );
 
 export const updateStudentData = createAsyncThunk(
-    "teams/updateStudentData",
+    "student/updateStudentData",
     async ({ studentId, fullName, group }, { rejectWithValue }) => {
         try {
             const response = await api.student.studentUpdate(studentId, {
@@ -81,7 +83,7 @@ export const updateStudentData = createAsyncThunk(
 );
 
 export const updateCost = createAsyncThunk(
-    "teams/updateCost",
+    "student/updateCost",
     async ({ studentId, timeId, cost }, { rejectWithValue }) => {
         try {
             await api.addCostToStudent.addCostToStudentTimetableUpdate(studentId, timeId, { cost: cost });
@@ -93,7 +95,7 @@ export const updateCost = createAsyncThunk(
 );
 
 export const formStudent = createAsyncThunk(
-    "teams/formStudent",
+    "student/formStudent",
     async (studentId, { rejectWithValue }) => {
         try {
             await api.formStudent.formStudentUpdate(studentId);
@@ -105,7 +107,7 @@ export const formStudent = createAsyncThunk(
 );
 
 export const deleteStudent = createAsyncThunk(
-    "teams/deleteStudent",
+    "student/deleteStudent",
     async (studentId, { rejectWithValue }) => {
         try {
             await api.deleteStudent.deleteStudentDelete(studentId);
@@ -115,6 +117,18 @@ export const deleteStudent = createAsyncThunk(
         }
     }
 );
+
+export const moderateStudent = createAsyncThunk(
+    "student/moderateStudent",
+    async ({ studentId, accept }, { rejectWithValue }) => {
+        try {
+            await api.moderateStudent.moderateStudentUpdate(studentId, { "accept" : accept });
+            return studentId;
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+)
 
 const studentSlice = createSlice({
     name: "student",
@@ -159,6 +173,7 @@ const studentSlice = createSlice({
                 state.currentTimeTable = action.payload.timetables;
                 state.fullName = action.payload.full_name;
                 state.group = action.payload.group;
+                state.studentStatus = action.payload.status;
             })
             .addCase(fetchStudentData.rejected, (state, action) => {
                 state.isLoading = false;
